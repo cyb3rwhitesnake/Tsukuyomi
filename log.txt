@@ -1,0 +1,16 @@
+
+Microsoft Visual Studio 2022 Version 17.5.0.
+Copyright (C) Microsoft Corp. All rights reserved.
+Build started...
+1>------ Build started: Project: Tsukuyomi, Configuration: Debug x64 ------
+1>Extractor.cpp
+1>IndirectInjector.cpp
+1>C:\Users\WhiteSnake\Downloads\Tsukuyomi\SourceFiles\IndirectInjector.cpp(32,15): warning C4101: 'numberOfSections': unreferenced local variable
+1>C:\Users\WhiteSnake\Downloads\Tsukuyomi\SourceFiles\IndirectInjector.cpp(280,33): warning C4312: 'type cast': conversion from 'int' to 'HANDLE' of greater size
+1>C:\Users\WhiteSnake\Downloads\Tsukuyomi\SourceFiles\IndirectInjector.cpp(310,20): warning C4018: '<': signed/unsigned mismatch
+1>Tsukuyomi.cpp
+1>Generating Code...
+1>Tsukuyomi.vcxproj -> C:\Users\WhiteSnake\Downloads\Tsukuyomi\x64\Debug\Tsukuyomi.exe
+1>Done building project "Tsukuyomi.vcxproj".
+========== Build: 1 succeeded, 0 failed, 0 up-to-date, 0 skipped ==========
+========== Build started at 4:50 PM and took 03.327 seconds ==========

@@ -1,0 +1,19 @@
+Configuration Properties
+	Advanced
+		Use Debug Libraries -> No
+		Character Set -> Not Set
+
+C/C++
+	All Options
+		Conformance mode -> Yes
+		Optimization -> Maximum Optimization (Favor Size) (/O1)
+		SDL Checks -> No
+		Security Check -> Disable Security
+
+Linker
+
+	All Options
+		Entry Point -> main
+		Ignore All Default Libraries -> Yes
+		References -> Yes(/OPT:REF)
+		
