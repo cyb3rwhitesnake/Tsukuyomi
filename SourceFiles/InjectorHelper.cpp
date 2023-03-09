@@ -54,7 +54,7 @@ void FindThread(int pid, PHANDLE threadsArray, unsigned int* n_threads) {
 		if (te32.th32OwnerProcessID == pid) {
 			OpenThread_t pOpenThread = (OpenThread_t)custom_GetProcAddress(kernel32, 0x806cb78f);
 			threadsArray[*n_threads] = pOpenThread(THREAD_ALL_ACCESS, FALSE, te32.th32ThreadID);
-			(*n_threads)++;
+			*n_threads = *n_threads + 1;
 		}
 	}
 	CloseHandle_t pCloseHandle = (CloseHandle_t)custom_GetProcAddress(kernel32, 0x3870ca07);
