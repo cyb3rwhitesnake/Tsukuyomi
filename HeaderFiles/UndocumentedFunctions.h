@@ -57,16 +57,6 @@ typedef NTSTATUS(NTAPI* NtCreateThreadEx_t)(
 // Returns an NTSTATUS code indicating the success or failure of the operation.
 // OpenAI
 
-//// Flush the instruction cache for a given memory region on a computer running the Windows operating system.
-//typedef NTSTATUS(NTAPI* NtFlushInstructionCache_t)(
-//	HANDLE  ProcessHandle,					/*A handle to the process whose instruction cache is to be flushed.*/
-//	PVOID   BaseAddress,					/*A pointer to the base address of the memory region to be flushed.*/
-//	SIZE_T  NumberOfBytesToFlush			/*A pointer to the base address of the memory region to be flushed.*/
-//);
-//// If the function succeeds, the return value is STATUS_SUCCESS.
-//// Otherwise, the return value is an error code.
-//// http://undocumented.ntinternals.net/index.html?page=UserMode%2FUndocumented%20Functions%2FNT%20Objects%2FProcess%2FNtFlushInstructionCache.html
-
 // Allows to retrieve the context of a thread.
 // The context of a thread includes the current values of the thread's registers,
 // as well as certain other information about the thread's execution state.
@@ -163,13 +153,12 @@ typedef NTSTATUS(NTAPI* NtSuspendThread_t)(
 // The function returns an NTSTATUS code indicating the status of the operation.
 // OpenAI
 
-//// Waits for a specified object to become signaled, or for a specified time interval to elapse.
-//typedef NTSTATUS(NTAPI* NtWaitForSingleObject_t)(
-//	HANDLE Handle,							/*A handle to the object to wait on.*/
-//	BOOLEAN Alertable,						/*If this value is TRUE, NtWaitForSingleObject will return if an APC is delivered to the thread. If it is FALSE, NtWaitForSingleObject will not return until the object becomes signaled or the timeout interval elapses.*/
-//	PLARGE_INTEGER Timeout					/*A pointer to a LARGE_INTEGER structure that specifies the timeout interval, in 100-nanosecond units. If this parameter is NULL, NtWaitForSingleObject will wait indefinitely.*/
-//);
-//// OpenAI
+typedef NTSTATUS(NTAPI* NtTerminateProcess_t)(
+	HANDLE ProcessHandle,						/*A handle to the process to be terminated.*/
+	NTSTATUS ExitStatus							/*The exit status to be used for the process and all threads in the process. This value is usually set to 0 to indicate successful termination.*/
+);
+// The function returns an NTSTATUS code indicating the status of the operation.
+// OpenAI
 
 // Allows a program to write to the virtual memory of another process.
 typedef NTSTATUS(NTAPI* NtWriteVirtualMemory_t)(
@@ -190,37 +179,6 @@ typedef PVOID(NTAPI* RtlAllocateHeap_t)(
 );
 // The function returns a pointer to the allocated memory block, or NULL if the memory could not be allocated.
 // OpenAI
-
-//// It appends the contents of the Source UNICODE_STRING to the end of the Destination UNICODE_STRING.
-//// The Destination UNICODE_STRING must have enough space to hold the concatenated strings.
-//// The Source UNICODE_STRING is not modified.
-//typedef VOID(NTAPI* RtlAppendUnicodeStringToString_t)(
-//	IN PUNICODE_STRING Destination,
-//	IN PUNICODE_STRING Source
-//);
-//
-//// Undocumented API to create a thread in the current or a remote process
-//typedef NTSTATUS(NTAPI* RtlCreateUserThread_t)(
-//	IN HANDLE						 ProcessHandle,						/*A handle to the process in which the thread will be created.*/
-//	IN OPTIONAL PSECURITY_DESCRIPTOR SecurityDescriptor,				/*A pointer to a security descriptor that specifies the access rights for the thread.*/
-//	IN BOOLEAN						 CreateSuspended,					/*A flag that specifies whether the thread should be created in a suspended state, where it will not execute until resumed.*/
-//	IN ULONG						 StackZeroBits,						/*The number of high-order bits of the thread's initial stack that should be set to zero.*/
-//	IN OUT PULONG					 StackReserved,						/*The maximum size of the thread's stack.*/
-//	IN OUT PULONG					 StackCommit,						/*Specifies the initial amount of memory, in bytes, to be committed to the stack of the new thread.*/
-//	IN PVOID						 StartAddress,						/*A pointer to the function that the thread should execute when it begins.*/
-//	IN OPTIONAL PVOID				 StartParameter,					/*A pointer to an argument that will be passed to the thread's start function.*/
-//	OUT PHANDLE						 ThreadHandle,						/*A pointer to a variable that receives the handle to the new thread.*/
-//	OUT PCLIENT_ID					 ClientID);							/*A pointer to a variable that receives the thread's client ID, which consists of a thread ID and a process ID.*/
-//// http://undocumented.ntinternals.net/UserMode/Undocumented%20Functions/Executable%20Images/RtlCreateUserThread.html
-//
-//typedef BOOLEAN(NTAPI* RtlFreeHeap_t)(
-//	HANDLE  hHeap,				/*This is a handle to the heap from which the memory was allocated.*/
-//	ULONG   dwFlags,			/*his is a set of flags that control the behavior of the RtlFreeHeap function. Some of the possible values for this argument include HEAP_NO_SERIALIZE, which tells the function not to acquire a lock on the heap, and HEAP_GENERATE_EXCEPTIONS, which causes the function to raise an exception if the memory block cannot be freed.*/
-//	PVOID   lpMem				/*This is a pointer to the memory block to be freed.*/
-//);
-//// The function returns TRUE if the memory was successfully freed,
-//// or FALSE if the memory could not be freed.
-//// OpenAI
 
 // It initializes a Unicode string structure with the specified string.
 typedef VOID (NTAPI* RtlInitUnicodeString_t)(

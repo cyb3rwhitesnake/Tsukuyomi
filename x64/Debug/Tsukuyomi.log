@@ -1,7 +1,8 @@
 ﻿  Extractor.cpp
+C:\Users\WhiteSnake\Downloads\Tsukuyomi\SourceFiles\Extractor.cpp(47,48): warning C4244: 'argument': conversion from 'SIZE_T' to 'DWORD', possible loss of data
   IndirectInjector.cpp
-C:\Users\WhiteSnake\Downloads\Tsukuyomi\SourceFiles\IndirectInjector.cpp(32,15): warning C4101: 'numberOfSections': unreferenced local variable
-C:\Users\WhiteSnake\Downloads\Tsukuyomi\SourceFiles\IndirectInjector.cpp(280,33): warning C4312: 'type cast': conversion from 'int' to 'HANDLE' of greater size
+C:\Users\WhiteSnake\Downloads\Tsukuyomi\SourceFiles\IndirectInjector.cpp(34,15): warning C4101: 'numberOfSections': unreferenced local variable
+C:\Users\WhiteSnake\Downloads\Tsukuyomi\SourceFiles\IndirectInjector.cpp(290,33): warning C4312: 'type cast': conversion from 'int' to 'HANDLE' of greater size
   Tsukuyomi.cpp
   Generating Code...
   Tsukuyomi.vcxproj -> C:\Users\WhiteSnake\Downloads\Tsukuyomi\x64\Debug\Tsukuyomi.exe

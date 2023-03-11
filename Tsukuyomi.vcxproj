@@ -152,18 +152,11 @@
     <ClInclude Include="HeaderFiles\InjectorHelper.h" />
     <ClInclude Include="HeaderFiles\UndocumentedFunctions.h" />
     <ClInclude Include="HeaderFiles\UndocumentedStruct.h" />
-    <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>
     <MASM Include="HeaderFiles\assembly.asm">
       <FileType>Document</FileType>
     </MASM>
-  </ItemGroup>
-  <ItemGroup>
-    <ResourceCompile Include="Resource.rc" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="obfuscated.raw" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
